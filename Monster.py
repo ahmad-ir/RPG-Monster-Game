@@ -12,6 +12,3 @@ class Monster:
 
     def is_alive(self):
         return self.health > 0
-
-# Commenting out the instantiation of the class, since we're just setting up the structure.
-# monster_example = Monster("Goblin", 30, 5)

@@ -1,12 +1,8 @@
 import random
-from Character import *
-from Monster import *
-
-# Assuming Character and Monster classes are defined in their respective files
-# and imported here from Character import Character from Monster import Monster
+from Character import Character 
+from Monster import Monster 
 
 class Game:
-
     def __init__(self):
         self.character = None
         self.monsters = {
@@ -17,12 +13,18 @@ class Game:
 
     def create_character(self):
         name = input("What is your character's name? ")
-        char_type = input("Choose your class (Warrior, Mage, Archer): ")
-        health = 100  # default health; can vary based on class
-        attack_power = 20  # default attack power; can also vary based on class
-        self.character = Character(name, char_type, health, attack_power)
+        while True:
+            char_type = input("Choose your class (Warrior, Mage, Archer): ")
+            if char_type in Character.class_stats:
+                break
+            else:
+                print("Invalid class. Please choose Warrior, Mage, or Archer.")
+        self.character = Character(name, char_type)
         print(
-            f"Character {self.character.name} the {self.character.char_type} is ready for adventure!")
+            (f"Character {self.character.name} the " 
+             f"{self.character.char_type} is ready for adventure!"))
+        print((f"Health: {self.character.health}, " 
+               f"Attack: {self.character.attack_power}"))
 
     def spawn_monster(self):
         monster_type = random.choice(list(self.monsters.keys()))
@@ -42,7 +44,7 @@ class Game:
                     break
             else:
                 print(
-                    f"{self.character.name} runs away from the {monster.species}!")
-                continue  # Skip the rest of the loop and spawn a new monster
+                    (f"{self.character.name} runs away from " 
+                     f"the {monster.species}!"))
 
         print("Thank you for playing!")
