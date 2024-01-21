@@ -8,7 +8,8 @@ class Monster:
     def attack(self, target):
         target.health -= self.attack_power
         print(
-            f"The {self.species} attacks {target.name} for {self.attack_power} damage.")
+            (f"The {self.species} attacks {target.name} for " 
+             f"{self.attack_power} damage."))
 
     def is_alive(self):
         return self.health > 0

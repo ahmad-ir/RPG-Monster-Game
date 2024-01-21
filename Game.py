@@ -1,6 +1,8 @@
 import random
 from Character import Character 
 from Monster import Monster 
+import pickle
+
 
 class Game:
     def __init__(self):
@@ -10,6 +12,21 @@ class Game:
             'Troll': {'health': 50, 'attack_power': 10},
             'Dragon': {'health': 100, 'attack_power': 20}
         }
+
+    def save_game(self):
+        with open('game_save.pkl', 'wb') as file:
+            pickle.dump(self, file)
+        print("Game saved successfully.")
+
+    def load_game(self):
+        try:
+            with open('game_save.pkl', 'rb') as file:
+                loaded_game = pickle.load(file)
+            print("Game loaded successfully.")
+            return loaded_game
+        except FileNotFoundError:
+            print("No saved game found.")
+            return None
 
     def create_character(self):
         name = input("What is your character's name? ")
@@ -32,19 +49,34 @@ class Game:
         return Monster(monster_type, **monster_info)
 
     def main_loop(self):
-        self.create_character()
+
+        # Check if the user wants to load a saved game
+        load_choice = input("Do you want to continue a saved game? (yes/no): ")
+        if load_choice.lower() == 'yes':
+            loaded_game = self.load_game()
+            if loaded_game:
+                self = loaded_game
+            else:
+                print("Starting a new game.")
+                self.create_character()
+        else:
+            self.create_character()
+
         while self.character.is_alive():
             monster = self.spawn_monster()
             print(f"A wild {monster.species} appears!")
-            action = input("Do you want to fight (f) or flee (r)? ")
+            action = input(
+                "Do you want to fight (f), flee (r), or save the game (s)? ")
             if action.lower() == 'f':
                 self.character.battle(monster)
                 if not self.character.is_alive():
                     print("Game Over")
                     break
-            else:
+            elif action.lower() == 'r':
                 print(
                     (f"{self.character.name} runs away from " 
-                     f"the {monster.species}!"))
+                     f" the {monster.species}!"))
+            elif action.lower() == 's':
+                self.save_game()
 
         print("Thank you for playing!")
